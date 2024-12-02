@@ -4,7 +4,7 @@ require("dotenv").config();
 const router = express.Router();
 
 // מפתח ה-API שלך ל-GPT (ודא שהמפתח שלך מוגדר בקובץ סביבה)
-const lol = 1; // process.env.API_KEY; מומלץ לשמור את המפתח בקובץ .env
+const API_KEY = process.env.API_KEY; //מומלץ לשמור את המפתח בקובץ .env
 
 // נתיב לבדיקה עם GPT
 router.post("/chat", async (req, res) => {
@@ -31,7 +31,7 @@ router.post("/chat", async (req, res) => {
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${lol}`,
+          Authorization: `Bearer ${API_KEY}`,
         },
       }
     );
