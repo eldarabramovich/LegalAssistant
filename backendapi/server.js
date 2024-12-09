@@ -1,27 +1,43 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const chatRoutes = require('./routes/ChatRoute');
 
 const app = express();
-const PORT = 5000; // פורט השרת שלך
+const port = process.env.PORT || 3000;
 
-// Middleware
+// הגדרות middleware
 app.use(cors());
-app.use(bodyParser.json());
-app.use((req, res, next) => {
-  console.log(`Received request: ${req.method} ${req.url}`);
+app.use(express.json());
+
+
+const validateRequest = (req, res, next) => {
+  const { prompt } = req.body;
+  if (!prompt) {
+    return res.status(400).json({ error: 'Prompt is required' });
+  }
+  if (typeof prompt !== 'string') {
+    return res.status(400).json({ error: 'Prompt must be a string' });
+  }
   next();
-});
-app.use((req, res, next) => {
-  req.url = req.url.trim(); // מסיר רווחים ותווים מיותרים
-  next();
+};
+
+
+app.use((err, req, res, next) => {
+  console.error('Error:', err.stack);
+  res.status(err.status || 500).json({
+    error: err.message || 'Internal Server Error',
+  });
 });
 
-// טעינת הנתיב
-const chatRoutes = require("./routes/gptcaller");
-app.use("/api/", chatRoutes);
-console.log("Chat route loaded.");
+app.use('/api', chatRoutes,validateRequest);
+
+// נקודת קצה לבדיקת תקינות השרת
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok' });
+});
+
 // הפעלת השרת
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+app.listen(port, () => {
+  console.log(`Lisning to ${port}`);
 });
