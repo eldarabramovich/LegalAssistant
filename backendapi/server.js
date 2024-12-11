@@ -4,7 +4,7 @@ const cors = require('cors');
 const chatRoutes = require('./routes/ChatRoute');
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 
 // הגדרות middleware
 app.use(cors());
