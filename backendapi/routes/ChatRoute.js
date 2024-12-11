@@ -11,9 +11,9 @@ router.post('/chat', async (req, res) => {
       return res.status(400).json({ error: 'Prompt is required' });
     }
 
-    const tokenCount = countTokens(prompt);
+    const tokenCount = openaiService.countTokens(prompt);
 
-    if (tokenCount > maxTokens) {
+    if (tokenCount > openaiService.maxTokens) {
       return res
         .status(400)
         .json({ error: `The prompt exceeds the limit of ${maxTokens} tokens` });

@@ -1,5 +1,7 @@
 require('dotenv').config();
 const OpenAI = require('openai');
+const { encoding_for_model } = require("tiktoken");
+
 
 class OpenAIService {
 
@@ -12,10 +14,20 @@ class OpenAIService {
   }
 
   countTokens(text) {
-    const encoding = encoding_for_model(this.model); // קידוד המודל
-    return encoding.encode(text).length; // מחזיר את מספר הטוקנים
-  }
+    if (!text) return 0;
 
+  try {
+    console.log("Loading encoding...");
+    const encoding = encoding_for_model("gpt-3.5-turbo");
+    console.log("Encoding loaded successfully");
+    const tokens = encoding.encode(text);
+    encoding.free(); // משחרר את הזיכרון לאחר השימוש
+    return tokens.length;
+  } catch (error) {
+    console.error("Error in counting tokens:", error);
+    throw new Error("Failed to count tokens");
+  }
+  }
 
 
   async generateChatResponse(prompt) {
