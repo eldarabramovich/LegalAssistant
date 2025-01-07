@@ -16,7 +16,7 @@ router.post('/chat', async (req, res) => {
     if (tokenCount > openaiService.maxTokens) {
       return res
         .status(400)
-        .json({ error: `The prompt exceeds the limit of ${maxTokens} tokens` });
+        .json({ error: `The prompt exceeds the limit of ${openaiService.maxTokens} tokens` });
     }
 
     const response = await openaiService.generateChatResponse(prompt);
