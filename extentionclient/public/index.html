@@ -7,6 +7,19 @@
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <div id="root"></div>
+  <div id="chatApp">
+    <!-- שדה קלט לשליחת הודעה -->
+    <textarea id="promptInput" placeholder="Enter your message"></textarea>
+    <button id="sendButton">Send</button>
+    
+    <!-- מקום להצגת התשובה -->
+    <div id="responseContainer"></div>
+    
+    <!-- הצגת היסטוריית השיחות -->
+    <h3>Chat History:</h3>
+    <div id="historyContainer"></div>
+  </div>
+  
+  <script src="script.js"></script>
 </body>
 </html>
