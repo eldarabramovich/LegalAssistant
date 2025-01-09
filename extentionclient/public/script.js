@@ -1,35 +1,69 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const sendButton = document.getElementById("send-button");
-    const promptInput = document.getElementById("prompt-input");
-    const responseOutput = document.getElementById("response-output");
-  
-    sendButton.addEventListener("click", async () => {
-      const prompt = promptInput.value.trim();
-  
-      if (!prompt) {
-        responseOutput.textContent = "Please enter a prompt.";
-        return;
+document.addEventListener('DOMContentLoaded', () => {
+  const sendButton = document.getElementById('sendButton');
+  const promptInput = document.getElementById('promptInput');
+  const responseContainer = document.getElementById('responseContainer');
+  const historyContainer = document.getElementById('historyContainer'); // הקונטיינר להצגת ההיסטוריה
+
+  // פונקציה לשליחת הודעה לשרת
+  const sendMessage = async () => {
+    const prompt = promptInput.value;
+
+    if (!prompt) {
+      alert('Please enter a prompt');
+      return;
+    }
+
+    try {
+      const res = await fetch('http://localhost:4000/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        responseContainer.textContent = `Bot: ${data.response}`;
+        promptInput.value = '';
+
+        // עדכן את ההיסטוריה לאחר שליחת ההודעה
+        fetchHistory();
+      } else {
+        responseContainer.textContent = `Error: ${data.error}`;
       }
-  
-      responseOutput.textContent = "Loading...";
-      try {
-        const res = await fetch("http://localhost:4000/api/chat", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ prompt }),
-        });
-  
-        if (!res.ok) {
-          throw new Error(`Server error: ${res.statusText}`);
-        }
-  
-        const data = await res.json();
-        responseOutput.textContent = data.response || "No response received.";
-      } catch (err) {
-        responseOutput.textContent = `Error: ${err.message}`;
-      }
-    });
-  });
-  
+    } catch (err) {
+      console.error('Error:', err);
+      responseContainer.textContent = 'Error communicating with server.';
+    }
+  };
+
+  // פונקציה לשליפת ההיסטוריה מהשרת
+  const fetchHistory = async () => {
+    try {
+      const res = await fetch('http://localhost:4000/api/history');
+      const history = await res.json();
+
+      // הצגת ההיסטוריה ב-HTML
+      historyContainer.innerHTML = ''; // איפוס הקונטיינר
+      history.forEach((entry) => {
+        const historyItem = document.createElement('div');
+        historyItem.classList.add('history-item');
+        historyItem.innerHTML = `
+          <p><strong>You:</strong> ${entry.prompt}</p>
+          <p><strong>Bot:</strong> ${entry.response}</p>
+        `;
+        historyContainer.appendChild(historyItem);
+      });
+    } catch (err) {
+      console.error('Error fetching history:', err);
+    }
+  };
+
+  // מאזין ללחיצה על כפתור שליחה
+  sendButton.addEventListener('click', sendMessage);
+
+  // טען את ההיסטוריה כשנטען הדף
+  fetchHistory();
+});
