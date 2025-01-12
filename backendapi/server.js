@@ -39,5 +39,5 @@ app.get('/health', (req, res) => {
 
 // הפעלת השרת
 app.listen(port, () => {
-  console.log(`Lisning to ${port}`);
+  console.log(`Listning to ${port}`);
 });

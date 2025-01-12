@@ -55,10 +55,32 @@
 </head>
 <body>
   <h1>GPT Chat</h1>
+  <button id="adminButton">Admin</button>
+  <div id="adminLogin" style="display: none;">
+    <input type="password" id="adminPasswordInput" placeholder="Enter admin password">
+    <button id="submitPasswordButton">Submit</button>
+  </div>
+  <div id="settingsPanel" style="display: none;">
+    <h2>Admin Settings</h2>
+    <label for="model-select">Choose GPT Model:</label>
+    <select id="model-select">
+      <option value="gpt-3.5-turbo">GPT-3.5-Turbo</option>
+      <option value="gpt-4">GPT-4</option>
+    </select>
+    <br><br>
+    <label for="api-key-input">API Key (if required):</label>
+    <input type="text" id="api-key-input" placeholder="Enter API key">
+    <br><br>
+    <button id="save-settings-button">Save Settings</button>
+  </div>
   <textarea id="promptInput" placeholder="Enter your question..."></textarea>
   <button id="sendButton">Send</button>
   <div id="responseContainer"></div>
   <div id="historyContainer"></div>
+  
+
+  <!-- חלון הגדרות -->
+  
   <link rel="stylesheet" href="popup.css">
   <script src="script.js" defer></script>
 </body>
