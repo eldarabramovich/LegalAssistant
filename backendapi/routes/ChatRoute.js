@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const openaiService = require('../services/openaiService');
-
+const adminPassword = 'EITAN'; // סיסמת אדמין
 let chatHistory = []; // משתנה גלובלי לשמירת היסטוריית השיחות
 
 // Middleware לבדיקת תקינות הבקשה
@@ -15,6 +15,15 @@ const validateRequest = (req, res, next) => {
   }
   next();
 };
+router.post('/verify-password', (req, res) => {
+  const { password } = req.body;
+
+  if (password === adminPassword) {
+    res.json({ success: true });
+  } else {
+    res.json({ success: false });
+  }
+});
 
 // נתיב POST: שליחת הודעה וקבלת תשובה
 router.post('/chat', validateRequest, async (req, res) => {
@@ -38,4 +47,22 @@ router.get('/history', (req, res) => {
   res.json(chatHistory); // מחזיר את כל ההיסטוריה
 });
 
+
+router.post('/save-settings', (req, res) => {
+  const { model, apiKey } = req.body;
+  if (!model) {
+    return res.status(400).json({ success: false, message: 'Model is required' });
+  }
+
+  console.log(model,apiKey);
+  openaiService.setModel(model);
+
+  if (apiKey) {
+    openaiService.setApiKey(apiKey);
+  }
+
+  console.log(`Model set to: ${model}`);
+  console.log(`API key updated: ${apiKey || 'Using default API key'}`);
+  res.json({ success: true });
+});
 module.exports = router;
