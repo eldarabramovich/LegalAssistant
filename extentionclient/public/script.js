@@ -3,23 +3,56 @@ document.addEventListener('DOMContentLoaded', () => {
   const promptInput = document.getElementById('promptInput');
   const responseContainer = document.getElementById('responseContainer');
   const historyContainer = document.getElementById('historyContainer');
-  const readAloudButton = document.getElementById('readAloudButton');
-
-  // פונקציה לקריאת טקסט בקול
-  const readAloud = () => {
-    const text = responseContainer.textContent.trim();
+  //כפתור העתק
+  const copyToClipboard = () => {
+    const responseContainer = document.getElementById('responseContainer'); // מציאת האלמנט
+    const text = responseContainer.textContent.trim(); // קבלת הטקסט
+  
     if (!text) {
-      alert('There is no response to read aloud.');
+      alert('There is no response to copy.');
       return;
     }
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'en-US'; // ניתן לשנות ל-"he-IL" לעברית
-    speechSynthesis.speak(utterance);
+  
+    navigator.clipboard.writeText(text)
+      .then(() => {
+        alert('Response copied to clipboard!');
+      })
+      .catch((err) => {
+        console.error('Failed to copy text: ', err);
+        alert('Failed to copy text. Please try again.');
+      });
   };
+  // מאזין לכפתור Copy
+  const copyButton = document.getElementById('copyButton'); // מציאת הכפתור
+  copyButton.addEventListener('click', copyToClipboard);
 
-  // מאזין לכפתור Read Aloud
-  readAloudButton.addEventListener('click', readAloud);
-
+  const adjustTextAlignment = () => {
+    const responseContainer = document.getElementById('responseContainer');
+    const text = responseContainer.textContent.trim();
+  
+    if (!text) {
+      console.log('No text to adjust alignment for.');
+      return;
+    }
+  
+    const hebrewRegex = /[\u0590-\u05FF]/; // זיהוי עברית
+    const isHebrew = hebrewRegex.test(text);
+  
+    if (isHebrew) {
+      responseContainer.style.textAlign = 'right'; // יישור לימין לעברית
+      responseContainer.style.direction = 'rtl'; // כיוון מימין לשמאל
+    } else {
+      responseContainer.style.textAlign = 'left'; // יישור לשמאל לאנגלית
+      responseContainer.style.direction = 'ltr'; // כיוון משמאל לימין
+    }
+  };
+  
+  // הוספת קריאה לפונקציה adjustTextAlignment בכל פעם שהתשובה מתעדכנת
+  const updateResponse = (responseText) => {
+    const responseContainer = document.getElementById('responseContainer');
+    responseContainer.textContent = responseText.trim();
+    adjustTextAlignment(); // עדכון יישור
+  };
   // פונקציה לשליחת הודעה לשרת
   const sendMessage = async () => {
     const prompt = promptInput.value;
@@ -41,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const data = await res.json();
 
       if (res.ok) {
-        responseContainer.textContent = `Bot: ${data.response}`;
+        updateResponse(data.response);
         promptInput.value = '';
 
         // עדכן את ההיסטוריה לאחר שליחת ההודעה
@@ -54,7 +87,6 @@ document.addEventListener('DOMContentLoaded', () => {
       responseContainer.textContent = 'Error communicating with server.';
     }
   };
-
   // פונקציה לשליפת ההיסטוריה מהשרת
   const fetchHistory = async () => {
     try {
@@ -76,7 +108,6 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error('Error fetching history:', err);
     }
   };
-
   // מאזין ללחיצה על כפתור שליחה
   sendButton.addEventListener('click', sendMessage);
 
