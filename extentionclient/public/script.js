@@ -2,13 +2,24 @@ document.addEventListener('DOMContentLoaded', () => {
   const sendButton = document.getElementById('sendButton');
   const promptInput = document.getElementById('promptInput');
   const responseContainer = document.getElementById('responseContainer');
-  const historyContainer = document.getElementById('historyContainer'); // הקונטיינר להצגת ההיסטוריה
-  const adminButton = document.getElementById('adminButton');
-  const adminLogin = document.getElementById('adminLogin');
-  const submitPasswordButton = document.getElementById('submitPasswordButton');
-  const adminPasswordInput = document.getElementById('adminPasswordInput');
-  const settingsPanel = document.getElementById('settingsPanel');
-  const saveSettings=document.getElementById('save-settings-button');
+  const historyContainer = document.getElementById('historyContainer');
+  const readAloudButton = document.getElementById('readAloudButton');
+
+  // פונקציה לקריאת טקסט בקול
+  const readAloud = () => {
+    const text = responseContainer.textContent.trim();
+    if (!text) {
+      alert('There is no response to read aloud.');
+      return;
+    }
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US'; // ניתן לשנות ל-"he-IL" לעברית
+    speechSynthesis.speak(utterance);
+  };
+
+  // מאזין לכפתור Read Aloud
+  readAloudButton.addEventListener('click', readAloud);
+
   // פונקציה לשליחת הודעה לשרת
   const sendMessage = async () => {
     const prompt = promptInput.value;
@@ -68,58 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // מאזין ללחיצה על כפתור שליחה
   sendButton.addEventListener('click', sendMessage);
-  adminButton.addEventListener('click', () => {
-    adminLogin.style.display = 'block';
-  });
 
-  // טיפול באימות סיסמה
-  submitPasswordButton.addEventListener('click', async () => {
-    const password = adminPasswordInput.value;
-
-    // שליחת הבקשה לשרת
-    const res = await fetch('http://localhost:4000/api/verify-password', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password }),
-    });
-
-    const data = await res.json();
-
-    if (data.success) {
-      alert('Access granted');
-      adminLogin.style.display = 'none'; // הסתר את תיבת הסיסמה
-      settingsPanel.style.display = 'block'; // הצג את הגדרות האדמין
-    } else {
-      alert('Invalid password');
-    }
-  });
-  saveSettings.addEventListener('click', async () => {
-
-    let model = document.getElementById('model-select').value;
-    let apiKey = document.getElementById('api-key-input').value;
-    try {
-      const res = await fetch('http://localhost:4000/api/save-settings', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ model,apiKey}),
-      });
-  
-      const data = await res.json();
-      if (data.success) {
-        settingsPanel.style.display = 'none'; // הסתר את הגדרות האדמין
-
-        alert('Settings saved successfully!');
-      } else {
-        alert(`Error saving settings: ${data.message}`);
-      }
-    } catch (err) {
-      console.error('Error saving settings:', err);
-      alert('Failed to save settings. Check console for details.');
-    }
-  });
-  
   // טען את ההיסטוריה כשנטען הדף
   fetchHistory();
 });
