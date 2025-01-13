@@ -1,87 +1,145 @@
 /* עיצוב בסיסי לגוף העמוד */
 body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 20px;
-    background-color: #f5f7fa;
-    color: #333;
-    width: 500px; /* הרחבת רוחב חלון התוסף */
-    height: 700px; /* הרחבת גובה חלון התוסף */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-  }
-  
-  /* כותרת ראשית */
-  h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
-    color: #007bff;
-    text-align: center;
-  }
-  
-  /* אזור הטקסט להזנת הפרומפט */
-  textarea {
-    width: 100%;
-    height: 80px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 10px;
-    font-size: 14px;
-    resize: none;
-    box-sizing: border-box;
-  }
-  
-  textarea:focus {
-    outline: none;
-    border: 1px solid #007bff;
-  }
-  
-  /* כפתור שליחה */
-  button {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    color: #fff;
-    background-color: #007bff;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    margin-bottom: 15px;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
-  button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
-  
-  /* אזור להצגת התשובה */
-  #response-output {
-    width: 100%;
-    height: 400px; /* גובה גדול להצגת תשובות */
-    overflow-y: auto;
-    padding: 10px;
-    background: #ffffff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 14px;
-    line-height: 1.5;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    box-sizing: border-box;
-  }
-  
-  /* טקסט שגיאה */
-  .error {
-    color: red;
-    margin-top: 10px;
-    font-size: 14px;
-  }
-  
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 20px;
+  background-color: #f5f7fa;
+  color: #333;
+  width: 500px; /* רוחב חלון התוסף */
+  height: 700px; /* גובה חלון התוסף */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  position: relative;
+}
+
+/* כותרת ראשית */
+h1 {
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: #007bff;
+  text-align: center;
+}
+
+/* כפתור אדמין */
+#adminButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 40px;
+  height: 40px;
+  font-size: 12px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#adminButton:hover {
+  background-color: #0056b3;
+}
+
+/* אזור הטקסט להזנת הפרומפט */
+textarea {
+  width: 100%;
+  height: 60px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 14px;
+  resize: none;
+  box-sizing: border-box;
+}
+
+textarea:focus {
+  outline: none;
+  border: 1px solid #007bff;
+}
+
+/* כפתור שליחה */
+#sendButton {
+  width: 80%; /* צמצום רוחב הכפתור */
+  padding: 6px; /* הקטנת ריפוד */
+  font-size: 12px; /* הקטנת גודל טקסט */
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+#sendButton:hover {
+  background-color: #0056b3;
+}
+
+#copyButton {
+  padding: 8px 16px;
+  font-size: 14px;
+  color: #fff;
+  background-color: #28a745;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#copyButton:hover {
+  background-color: #218838;
+}
+/* חלונית התשובה */
+#responseContainer {
+  flex: 1; /* תופס את שאר המקום */
+  margin-right: 10px; /* רווח בין חלונית התשובה לכפתור */
+  padding: 10px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow-y: auto;
+  max-height: 150px; /* גובה מקסימלי */
+  font-size: 12px; /* טקסט קטן יותר */
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+#responseContainer {
+  width: 90%; /* התאמת רוחב */
+  max-height: 150px; /* גובה מקסימלי */
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow-y: auto;
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin-bottom: 5px; /* מרווח קטן בין חלון התשובה לכפתור */
+}
+
+/* היסטוריית שיחות */
+#historyContainer {
+  width: 90%;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+/* טקסט שגיאה */
+.error {
+  color: red;
+  font-size: 12px;
+  margin-top: 10px;
+}
