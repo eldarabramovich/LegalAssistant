@@ -15,6 +15,7 @@ const validateRequest = (req, res, next) => {
   }
   next();
 };
+// בדיקת הסיסמא של האדמין שאכן נכונה 
 router.post('/verify-password', (req, res) => {
   const { password } = req.body;
 
@@ -47,7 +48,7 @@ router.get('/history', (req, res) => {
   res.json(chatHistory); // מחזיר את כל ההיסטוריה
 });
 
-
+//שמירת ההגדרות של האדמין לאחר שינוי מודל ומפתח 
 router.post('/save-settings', (req, res) => {
   const { model, apiKey } = req.body;
   if (!model) {
@@ -55,14 +56,14 @@ router.post('/save-settings', (req, res) => {
   }
 
   console.log(model,apiKey);
-  openaiService.setModel(model);
+  openaiService.setModel(model);// שינוי מודל
 
   if (apiKey) {
-    openaiService.setApiKey(apiKey);
+    openaiService.setApiKey(apiKey);// שינוי מודל
   }
 
-  console.log(`Model set to: ${model}`);
-  console.log(`API key updated: ${apiKey || 'Using default API key'}`);
+  console.log(`Model set to: ${model}`); // הדפסת המודל שנשמר אם נשמר בהצלחה
+  console.log(`API key updated: ${apiKey || 'Using default API key'}`); // הדפסץ המפתח שנשמר אם נשמר בהצלחה
   res.json({ success: true });
 });
 module.exports = router;

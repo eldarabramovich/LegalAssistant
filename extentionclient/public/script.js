@@ -73,7 +73,7 @@ const updateResponse = (responseText) => {
   // פונקציה לשליחת הודעה לשרת
   const sendMessage = async () => {
     const prompt = promptInput.value;
-
+    copyButton.style.display='block';
     if (!prompt) {
       alert('Please enter a prompt');
       return;
